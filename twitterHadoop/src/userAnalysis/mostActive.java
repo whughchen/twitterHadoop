@@ -1,10 +1,4 @@
-/**
- * twitterHadoop  UserAnalysis.java
- *
- * Copyright 2013 Xdata@SIAT
- * Created:2013-3-26 下午1:56:30
- * email: gh.chen@siat.ac.cn
- */
+
 
 /**
  * twitterHadoop  UserAnalysis.java
@@ -61,8 +55,12 @@ public class mostActive {
             	String twitt=tokenizerArticle.toString();
             	String[] twittArray=twitt.split(";");
             	if(twittArray.length<5) return;
-            	String user=twittArray[4];
+            	String user=twittArray[4].replace("[", " ");
+            	user=user.replace("]", " ");
+            	user=user.trim();
+            	
             	String[] tmp=user.split(",");
+            	
             	String userName;
          	
             	int userFollowerCnt;
@@ -77,10 +75,10 @@ public class mostActive {
             	}
             	else return;
             	
-            	if( mostActive.isNumeric(tmp[4])){
-            		userStatusCnt=Integer.parseInt(tmp[4]);
-            	}
-            	else return;
+//            	if( mostActive.isNumeric(tmp[4])){
+//            		userStatusCnt=Integer.parseInt(tmp[4]);
+//            	}
+//            	else return;
 
                 Text name = new Text(userName);
                 // 输出姓名和粉丝数
