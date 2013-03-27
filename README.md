@@ -14,9 +14,11 @@ Steps to run the executable package:
 2. Configure your execution environment: copy the the jar files specified in the .project(in this folder) file to your $STORM_HOME/lib;
 3. run command:
 
+
 ----
     storm jar target/twitterStreamAnalysis-0.0.1-SNAPSHOT.jar TwttrStrmAnlyst.StreamAnalysisTopo twitterStream
 ----
+
 
    this program will download twitter messages form Twitter stream API, and save to this folder named "YYYY-MM-DD-HH", means that it will generate each file for each file.
    
@@ -24,6 +26,7 @@ Steps to run the executable package:
 
 
 Additional:
+---------
   (1) If your country or district was blocked to access facebook, twitter, youtobu and other web medias, you need to follow the instructions  to circumvention the firewall of your ISP provider.
      (It made me a lot trouble since twitter was offically blocked by Chinese government for political reasons .)
   (2) A real time running storm cluster control panel can be reviewed from: http://54.248.240.232:8080/
