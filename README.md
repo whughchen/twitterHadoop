@@ -40,7 +40,7 @@
      hadoop fs -get  mostActive    .
 ----
    
-  (4)__to analysis the most popular user on twitter during this time__.   (sort by descending) 
+  (4) **to analysis the most popular user on twitter during this time**.   (sort by descending) 
    
 ----
      hadoop jar examples/twitterHadoop.jar  userAnalysis.mostPopular   in mostPopular
