@@ -15,7 +15,7 @@
 3. put the source twitter data, eg: 2013-03-25-18 in any folder of this directory such as "examples".
 3. run command:
 
- (1) **to  analysis which channel did those twitter come from**.
+(1) **to  analysis which channel did those twitter come from**.
   
 ----
     hadoop fs -mkdir in
