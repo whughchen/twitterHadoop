@@ -50,16 +50,7 @@ public class mostPopular {
 
             // 将输入的纯文本文件的数据转化成String
             String line = value.toString(); 
-
-            // 将输入的数据首先按行进行分割
-            StringTokenizer tokenizerArticle = new StringTokenizer(line, "\r\n"); 
-
-            // 分别对每一行进行处理
-            while (tokenizerArticle.hasMoreElements()) {
-
-                // 每行按;划分
-            	String twitt=tokenizerArticle.toString();
-            	String[] twittArray=twitt.split(";");
+            	String[] twittArray=line.split(";");
             	if(twittArray.length<5) return;
             	String user=twittArray[4].replace("[", " ");
             	user=user.replace("]", " ");
@@ -90,7 +81,6 @@ public class mostPopular {
                 context.write(name, new IntWritable(userStatusCnt));
 
             }
-        }
     }
 
  
@@ -108,13 +98,8 @@ public class mostPopular {
             Iterator<IntWritable> iterator = values.iterator();
 
             while (iterator.hasNext()) {
-            	 context.write(key, new IntWritable(Integer.parseInt(iterator.toString()  )));
+            	 context.write(key, new IntWritable(iterator.next().get()));
             } 
-//            Text ran_Key;
-//            for(IntWritable tmp : values){
-//            	ran_Key=new Text(key+"_"+linenum);
-//            	context.write(ran_Key, tmp);  
-//            	linenum = new IntWritable(linenum.get()+1);
 
             }           
 
@@ -126,9 +111,9 @@ public class mostPopular {
 
         Configuration conf = new Configuration();
 
-        // 这句话很关键
-        conf.set("mapred.job.tracker", "ccrfox10:9001"); 
-        String[] ioArgs = new String[] { "in", "out" };
+
+     
+        String[] ioArgs = new String[] { "resource/2013-03-25-18", "out" };
         String[] otherArgs = new GenericOptionsParser(conf, ioArgs).getRemainingArgs();
 
         if (otherArgs.length != 2) {

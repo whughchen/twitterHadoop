@@ -35,7 +35,7 @@ public class mostActive {
 
     public static class Map extends
 
-            Mapper<LongWritable, Text, Text, IntWritable> { 
+            Mapper<LongWritable , Text ,Text, IntWritable> { 
 
         // 实现map函数
         public void map(LongWritable key, Text value, Context context)
@@ -44,16 +44,7 @@ public class mostActive {
 
             // 将输入的纯文本文件的数据转化成String
             String line = value.toString(); 
-
-            // 将输入的数据首先按行进行分割
-            StringTokenizer tokenizerArticle = new StringTokenizer(line, "\r\n"); 
-
-            // 分别对每一行进行处理
-            while (tokenizerArticle.hasMoreElements()) {
-
-                // 每行按;划分
-            	String twitt=tokenizerArticle.toString();
-            	String[] twittArray=twitt.split(";");
+            	String[] twittArray=line.split(";");
             	if(twittArray.length<5) return;
             	String user=twittArray[4].replace("[", " ");
             	user=user.replace("]", " ");
@@ -64,8 +55,7 @@ public class mostActive {
             	String userName;
          	
             	int userFollowerCnt;
-            	int userStatusCnt;
-            	if(tmp.length<6) return;
+             	if(tmp.length<6) return;
             	if(tmp[1].equals(null)){
             		return;}
             	else {userName=tmp[1];}
@@ -85,7 +75,7 @@ public class mostActive {
                 context.write(name, new IntWritable(userFollowerCnt));
 
             }
-        }
+
     }
 
  
@@ -122,9 +112,8 @@ public class mostActive {
 
         Configuration conf = new Configuration();
 
-        // 这句话很关键
-        conf.set("mapred.job.tracker", "ccrfox10:9001"); 
-        String[] ioArgs = new String[] { "in", "out" };
+       // conf.set("mapred.job.tracker", "ccrfox10:9001"); 
+        String[] ioArgs = new String[] { "examples/2013-03-25-18", "examples/mostActive" };
         String[] otherArgs = new GenericOptionsParser(conf, ioArgs).getRemainingArgs();
 
         if (otherArgs.length != 2) {
@@ -171,12 +160,12 @@ public class mostActive {
    
     public static boolean isNumeric(String str)
     {
-    Pattern pattern = Pattern.compile("[0-9]*");
-    Matcher isNum = pattern.matcher(str);
-    if( !isNum.matches() )
-    {
-    return false;
-    }
-    return true;
+    	Pattern pattern = Pattern.compile("[0-9]*");
+    	Matcher isNum = pattern.matcher(str);
+    	if( !isNum.matches() )
+    	{
+    		return false;
+    	}
+    	return true;
     } 
-    }
+}

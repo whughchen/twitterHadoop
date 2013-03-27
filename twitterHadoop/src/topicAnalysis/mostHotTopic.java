@@ -22,6 +22,7 @@ import org.apache.hadoop.mapred.Reporter;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.Reducer.Context;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -39,38 +40,34 @@ public class mostHotTopic {
 
         private final static IntWritable one = new IntWritable(1);
         private Text word = new Text();
-        //public void map(LongWritable key, Text value, Context context)
-    	public void map(LongWritable key, Text value,OutputCollector<Text, IntWritable> output, 
-                Reporter reporter)
+        public void map(LongWritable key, Text value, Context context)
+    	//public void map(LongWritable key, Text value,OutputCollector<Text, IntWritable> output, Reporter reporter)
                 throws IOException, InterruptedException {
 
             // 将输入的纯文本文件的数据转化成String
             String line = value.toString(); 
-
-            // 将输入的数据首先按行进行分割
-            StringTokenizer tokenizerArticle = new StringTokenizer(line, "\r\n"); 
-
-            // 分别对每一行进行处理
-            while (tokenizerArticle.hasMoreElements()) {
-
-                // 每行按;划分
-            	String twitt=tokenizerArticle.toString();
-            	String[] twittArray=twitt.split(";");
+            	String[] twittArray=line.split(";");
             	if(twittArray.length<8) return;
             	String tags=twittArray[7].replace("[", " ");
             	tags=tags.replace("]", " ");
+            	tags=tags.trim();
             	String[] tmp=tags.split(",");
             	int start,end;
             	String tag;
-            	for(int i=0;i<tags.length();i++){
+            	for(int i=0;i<tmp.length;i++){
+            		if(tmp[i].equals(null)) 
+            			break;
             	start=tmp[i].indexOf("'");
             	end=tmp[i].indexOf("}");
-            	tag=tmp[i].substring(start+1, end-2);
+            	if(start<0 || end<0) return;
+            	tag=tmp[i].substring(start+1, end-1);
+            	
             	word.set(tag);
-            	output.collect(word, one);
+            	//output.collect(word, one);
+            	context.write(word, one);
             	}
              }
-        }
+
     }
 
  
@@ -79,17 +76,18 @@ public class mostHotTopic {
 
             Reducer<Text, IntWritable, Text, IntWritable> {
 
-        // 实现reduce函数
-    	public void reduce(Text key, Iterator<IntWritable> values,
-                OutputCollector<Text, IntWritable> output,Reporter reporter)
+        // 实现reduce函数                  
+    	public void reduce(Text key, Iterable<IntWritable> values,Context context)
                 throws IOException, InterruptedException {
-        	IntWritable linenum = new IntWritable(1);
+        	Integer linenum=0;
 
         	int sum = 0;
-            while (values.hasNext()) {
-              sum += values.next().get();
-            }
-            output.collect(key, new IntWritable(sum));
+        	for (IntWritable val : values) {
+                sum += val.get();
+               }
+        	//String keyStr=linenum.toString()+","+key.toString();
+        
+            context.write(key ,new IntWritable(sum));
 
             }           
 
@@ -101,9 +99,8 @@ public class mostHotTopic {
 
         Configuration conf = new Configuration();
 
-        // 这句话很关键
-        conf.set("mapred.job.tracker", "ccrfox10:9001"); 
-        String[] ioArgs = new String[] { "in", "out" };
+
+        String[] ioArgs = new String[] { "examples/2013-03-25-18", "examples/mostHotTopic" };
         String[] otherArgs = new GenericOptionsParser(conf, ioArgs).getRemainingArgs();
 
         if (otherArgs.length != 2) {
@@ -127,16 +124,23 @@ public class mostHotTopic {
         job.setReducerClass(Reduce.class);
 
  
+//        job.setMapOutputKeyClass(Text.class);
+//        job.setMapOutputValueClass(IntWritable.class);
+//
+//        job.setOutputKeyClass(Text.class);
+//        job.setOutputValueClass(IntWritable.class);
+//        
+        
+        
 
         // 设置输出类型
-
+        //job.setOutputKeyClass(LongWritable.class);
+     
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class); 
 
-        // 将输入的数据集分割成小数据块splites，提供一个RecordReder的实现
 
         job.setInputFormatClass(TextInputFormat.class);
-        // 提供一个RecordWriter的实现，负责数据输出
         job.setOutputFormatClass(TextOutputFormat.class); 
 
         // 设置输入和输出目录
@@ -150,12 +154,12 @@ public class mostHotTopic {
    
     public static boolean isNumeric(String str)
     {
-    Pattern pattern = Pattern.compile("[0-9]*");
-    Matcher isNum = pattern.matcher(str);
-    if( !isNum.matches() )
-    {
-    return false;
-    }
-    return true;
+    	Pattern pattern = Pattern.compile("[0-9]*");
+    	Matcher isNum = pattern.matcher(str);
+    	if( !isNum.matches() )
+    	{
+    		return false;
+    	}
+    	return true;
     } 
-    }
+}
