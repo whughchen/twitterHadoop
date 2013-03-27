@@ -16,6 +16,7 @@
 3. run command:
 
   **to  analysis which channel did those twitter come from**.
+  
 ----
     hadoop fs -mkdir in
     hadoop fs -put examples/2013-03-25-18  in
@@ -26,12 +27,14 @@
 
    
   **to analysis the most hot topic happened on twitter during this time**.  
+  
 ----
      hadoop jar examples/twitterHadoop.jar  topicAnalysis.mostHotTopic   in mostHotTopic 
      hadoop fs -get  mostHotTopic    .
 ----
   
-  **to analysis the most active user on twitter during this time**. (sort by descending)   
+  **to analysis the most active user on twitter during this time**. (sort by descending) 
+  
 ----
      hadoop jar examples/twitterHadoop.jar  userAnalysis.mostActive   in mostActive
      hadoop fs -get  mostActive    .
