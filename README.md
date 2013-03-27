@@ -4,26 +4,46 @@
 ###Modules
 -----
 1. SourceAnalysis, statistics on which channel did those twitter come from.
-2. UserAnalysis,   analysis the most Active user, the most Popular user, etc. (top 10 ,etc.)
+2. userAnalysis,   analysis the most Active user, the most Popular user, etc. (top 10 ,etc.)
 3. TopicAnalysis,  Statistics on what's the most hot topic going on the twitter.(top 10,etc.)
 
 
 ###Steps to run the executable package:
 ------------
-1. Follow the struction on https://github.com/nathanmarz/storm/wiki/Setting-up-a-Storm-cluster to set up a storm cluster;
-2. Configure your execution environment: copy the the jar files specified in the .project(in this folder) file to your $STORM_HOME/lib;
+1. Set up a Hadoop cluster;
+2. Configure your execution environment: add jar files specified in the .project(in this folder) file to your $Hadoop_HOME/lib;
+3. put the source twitter data, eg: 2013-03-25-18 in any folder of this directory such as "examples".
 3. run command:
 
-
+ 
 ----
-    storm jar target/twitterStreamAnalysis-0.0.1-SNAPSHOT.jar TwttrStrmAnlyst.StreamAnalysisTopo twitterStream
+    hadoop fs -mkdir in
+    hadoop fs -put examples/2013-03-25-18  in
+    hadoop jar examples/twitterHadoop.jar  sourceAnalysis.DeviceStatistic   in DeviceStatistic 
+    hadoop fs -get DeviceStatistic   .
+    cat  DeviceStatistic/part*
 ----
+    to  analysis which channel did those twitter come from.
+    
+----
+     hadoop jar examples/twitterHadoop.jar  topicAnalysis.mostHotTopic   in mostHotTopic 
+     hadoop fs -get  mostHotTopic    .
+----
+    to analysis the most hot topic happened on twitter during this time. 
+    
+----
+     hadoop jar examples/twitterHadoop.jar  userAnalysis.mostActive   in mostActive
+     hadoop fs -get  mostActive    .
+----
+    to analysis the most active user on twitter during this time. (sort by descending)
+    
+----
+     hadoop jar examples/twitterHadoop.jar  userAnalysis.mostPopular   in mostPopular
+     hadoop fs -get  mostPopular    .
+----
+    to analysis the most popular user on twitter during this time.   (sort by descending) 
 
-
-   this program will download twitter messages form Twitter stream API, and save to this folder named "YYYY-MM-DD-HH", means that it will generate each file for each file.
-   
-4. At the same time , this program will generation 2-minute intervaled "mostActive","mostPopular" user statistics in this folder.
-
+    
 
 ###Additional:
 ---------
