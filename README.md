@@ -14,9 +14,9 @@ Steps to run the executable package:
 2. Configure your execution environment: copy the the jar files specified in the .project(in this folder) file to your $STORM_HOME/lib;
 3. run command:
 
-  ----
+----
     storm jar target/twitterStreamAnalysis-0.0.1-SNAPSHOT.jar TwttrStrmAnlyst.StreamAnalysisTopo twitterStream
-  ----
+----
 
    this program will download twitter messages form Twitter stream API, and save to this folder named "YYYY-MM-DD-HH", means that it will generate each file for each file.
    
