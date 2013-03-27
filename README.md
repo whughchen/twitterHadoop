@@ -15,7 +15,7 @@
 3. put the source twitter data, eg: 2013-03-25-18 in any folder of this directory such as "examples".
 3. run command:
 
-  __to  analysis which channel did those twitter come from__.
+  **to  analysis which channel did those twitter come from**.
 ----
     hadoop fs -mkdir in
     hadoop fs -put examples/2013-03-25-18  in
@@ -25,13 +25,13 @@
 ----
 
    
-  __to analysis the most hot topic happened on twitter during this time__.  
+  **to analysis the most hot topic happened on twitter during this time**.  
 ----
      hadoop jar examples/twitterHadoop.jar  topicAnalysis.mostHotTopic   in mostHotTopic 
      hadoop fs -get  mostHotTopic    .
 ----
   
-  __to analysis the most active user on twitter during this time__. (sort by descending)   
+  **to analysis the most active user on twitter during this time**. (sort by descending)   
 ----
      hadoop jar examples/twitterHadoop.jar  userAnalysis.mostActive   in mostActive
      hadoop fs -get  mostActive    .
