@@ -11,7 +11,7 @@
 ###Steps to run the executable package:
 ------------
 1. Set up a Hadoop cluster;
-2. Configure your execution environment: add jar files specified in the .project(in this folder) file to your $Hadoop_HOME/lib;
+2. Configure your execution environment: add jar files specified in the .classpath file to your $Hadoop_HOME/lib;
 3. put the source twitter data, eg: 2013-03-25-18 in any folder of this directory such as "examples".
 3. run command:
 
